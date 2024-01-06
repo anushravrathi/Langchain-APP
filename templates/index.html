@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./static/css/output.css">
+  <title>AI Article Writer</title>
+</head>
+<body>
+  <nav class="bg-black">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-4">
+        <div class="text-white font-bold">AI Article Writer</div>
+        <div class="flex space-x-4">
+          <a href="#" class="text-white ml-4">Contact us @ **email**</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container mx-auto my-4 px-4 md:px-0">
+    <h1 style="font-size: 24px; font-weight: bold; color: #333;">AI Article Writer</h1>
+    <textarea class="border my-2 p-2 w-full" placeholder="Enter the title of your article"></textarea>
+    <button id="submitBtn" class="bg-black text-white py-2 px-4 my-1 rounded">Generate</button>
+    <div id="loader" class="hidden border-t-4 border-black border-solid h-8 w-8 rounded-full animate-spin my-4 mx-auto"></div>
+    <div id="content" class="bg-gray-200 p-2 my-4">Your Content Will Show Up Here</div>
+  </div>
+  <script>
+    // Function to show the loader
+    const showLoader = () => {
+      document.getElementById('loader').style.display = 'block';
+    };
+
+    // Function to hide the loader
+    const hideLoader = () => {
+      document.getElementById('loader').style.display = 'none';
+    };
+    //function to take the prompt and fetch the output from /generate endpoint
+    const populate = async () => {
+      showLoader(); // Show the loader when waiting for the response
+      let prompt = document.querySelector('textarea').value;
+      let response = await fetch('/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: prompt })
+      });
+      hideLoader(); // Hide the loader when the response is received
+      content.innerHTML = await response.text();
+    };
+      const submitBtn = document.querySelector('#submitBtn');
+      submitBtn.addEventListener('click', () => {
+        populate();
+      });
+  </script>
+</body>
+</html>
